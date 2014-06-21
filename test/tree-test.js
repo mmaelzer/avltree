@@ -62,6 +62,7 @@ test('tree methods', function(t) {
   readStream.on('data', streamData.push.bind(streamData));
   readStream.on('end', t.deepEqual.bind(t, streamData, testArray, 'tree.createReadStream()'));
 
+  t.deepEqual(tree.clone().walk(), tree.walk(), 'tree.clone()');
   // Figure out why this test only fails on travis-ci
   // var writeTree = new Tree();
   // var writeStream = writeTree.createWriteStream();
@@ -70,6 +71,4 @@ test('tree methods', function(t) {
   // readStream.on('end', function() {
   //   t.deepEqual(writeTree.walk(), testArray, 'tree.writeStream()');
   // });
-
-  // t.deepEqual(tree.clone().walk(), tree.walk(), 'tree.clone()');
 });
