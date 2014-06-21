@@ -65,8 +65,9 @@ test('tree methods', function(t) {
 
   var writeTree = new Tree();
   var writeStream = writeTree.createWriteStream();
-  readStream.pipe(writeStream)
-  readStream.on('end', function() {
+  var readStream2 = tree.createReadStream(iteratorOptions)
+  readStream2.pipe(writeStream);
+  readStream2.on('end', function() {
     t.deepEqual(writeTree.walk(), testArray, 'tree.writeStream()');
   });
 
