@@ -11,7 +11,7 @@ function createPopulatedTree(data) {
 }
 
 test('tree methods', function(t) {
-  t.plan(11);
+  t.plan(13);
   // A nice prime number
   var DATA_SIZE = 102797;
   var testData = [];
@@ -63,6 +63,17 @@ test('tree methods', function(t) {
   readStream.on('end', t.deepEqual.bind(t, streamData, testArray, 'tree.createReadStream()'));
 
   t.deepEqual(tree.clone().walk(), tree.walk(), 'tree.clone()');
+  tree.walkAsync(function(err, values) {
+    t.deepEqual(values, tree.walk(), 'tree.walkAsync()');
+  });
+  var treeWithMethod = new Tree().compareWith(function(a, b) {
+    return b - a;
+  });
+
+  _.sample(testData, testData.length).forEach(treeWithMethod.insert, treeWithMethod);
+  t.ok(treeWithMethod.min() === _.max(testData) && treeWithMethod.max() === _.min(testData),
+          'tree.compareWith()');
+
   // Figure out why this test only fails on travis-ci
   // var writeTree = new Tree();
   // var writeStream = writeTree.createWriteStream();
