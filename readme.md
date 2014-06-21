@@ -6,7 +6,9 @@ An AVL tree implementation that supports node streams.
 
 Install
 ---------
-  npm install avltree
+``` javascript
+npm install avltree
+```
 
 Example
 ---------
