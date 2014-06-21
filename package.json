@@ -1,0 +1,31 @@
+{
+  "name": "avltree",
+  "version": "0.1.0",
+  "description": "an AVL tree implementation that supports node streams",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node test/tree-test.js"
+  },
+  "keywords": [
+    "avl",
+    "avltree",
+    "binary",
+    "binarytree",
+    "bintree",
+    "btree",
+    "cache",
+    "streaming",
+    "streams",
+    "tree",
+    "trees"
+  ],
+  "author": "Mike Maelzer <mmaelzer@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "tape": "~2.13.1",
+    "underscore": "~1.6.0"
+  }
+}
