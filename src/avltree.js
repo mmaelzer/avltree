@@ -4,12 +4,14 @@ var Iterator = require('./iterator');
 var _ = require('./helpers');
 
 /**
- *  @param {*} value
+ *  @param {*} options
  *  @constructor
  */
-function AvlTree(value) {
+function AvlTree(options) {
   this._initialize();
-  this.value = value;
+  var hasOptions = typeof options === 'object' && ('compareWith' in options || 'value' in options);
+  this.compare = hasOptions ? options.compareWith || defaultCompare : defaultCompare;
+  this.value = hasOptions ? options.value : options;
   this.height = 1;
   return this;
 }
@@ -35,10 +37,12 @@ AvlTree.prototype.createReadStream = function(options) {
 /**
  *  Override the default comparator method with a custom method
  *  @param {Function}
+ *  @return {AvlTree}
  *  @public
  */
 AvlTree.prototype.compareWith = function(comparator) {
-  AvlTree.prototype.compare = comparator;
+  this.compare = comparator;
+  return this;
 };
 
 /**
@@ -47,7 +51,7 @@ AvlTree.prototype.compareWith = function(comparator) {
  *  @return {Boolean}
  *  @public
  */
-AvlTree.prototype.compare = function(a, b) {
+function defaultCompare(a, b) {
   return a - b;
 };
 
@@ -68,7 +72,7 @@ AvlTree.prototype._initialize = function() {
  * @public
  */
 AvlTree.prototype.clone = function() {
-  var tree = new AvlTree();
+  var tree = new AvlTree({compareWith: this.compare});
   this.walk().forEach(tree.insert, tree);
   return tree;
 };
@@ -80,10 +84,11 @@ AvlTree.prototype.clone = function() {
  */
 AvlTree.prototype.insert = function(value) {
   var inserted = (function() {
-    var comparison = this.compare(this.value, value);
     if (_.isUndefined(this.value)) {
       return (this.value = value);
-    } else if (comparison > 0) {
+    }
+    var comparison = this.compare(this.value, value);
+    if (comparison > 0) {
       return this._insertLeft(value);
     } else if (comparison < 0) {
       return this._insertRight(value);
@@ -128,7 +133,7 @@ AvlTree.prototype._childInsert = function(node, value) {
   if (this[node]) {
     return this[node].insert(value);
   } else {
-    return (this[node] = new AvlTree(value));
+    return (this[node] = new AvlTree({value: value, compareWith: this.compare}));
   }
 };
 
@@ -309,6 +314,36 @@ AvlTree.prototype.walk = function() {
     values = values.concat(this.right.walk());
   }
   return values;
+};
+
+/**
+ *  @param {Function(Error, Array.<*>)} callback
+ *  @return {Array.<*>}
+ *  @public
+ */
+AvlTree.prototype.walkAsync = function(callback) {
+  _.delay(function() {
+    var leftValues = [];
+    var rightValues = [];
+    var thisValue = this.value;
+    var times = 1;
+    if (this.left) {
+      this.left.walkAsync(function(err, values) {
+        done(leftValues = values);
+      });
+      times++;
+    }
+    if (this.right) {
+      this.right.walkAsync(function(err, values) {
+        done(rightValues = values);
+      });
+      times++;
+    }
+    var done = _.after(times, function() {
+      callback(null, leftValues.concat([thisValue]).concat(rightValues));
+    });
+    done();
+  }.bind(this));
 };
 
 /**
