@@ -48,6 +48,29 @@ helpers.pluck = function(array, prop) {
 };
 
 /**
+ *  @param {Number} times
+ *  @param {Function} fn
+ *  @return {Function}
+ */
+helpers.after = function(times, fn) {
+  return function() {
+    if (--times < 1) {
+      fn.apply(this, arguments);
+    }
+  };
+};
+
+var delay = setImmediate ? setImmediate : process & process.nextTick ? process.nextTick : timeout;
+
+function timeout(fn) {
+  return setTimeout(fn, 0);
+}
+
+helpers.delay = function(fn) {
+  delay(fn);
+};
+
+/**
  *  @param {Array<*>} array
  *  @param {Function|*} prop
  *  @return {Array.<*>}
