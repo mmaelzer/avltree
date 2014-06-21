@@ -11,7 +11,7 @@ function createPopulatedTree(data) {
 }
 
 test('tree methods', function(t) {
-  t.plan(12);
+  t.plan(11);
   // A nice prime number
   var DATA_SIZE = 102797;
   var testData = [];
