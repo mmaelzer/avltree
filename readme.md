@@ -122,7 +122,6 @@ Returns an `Iterator` object that you can call `next()` or `previous()` on to wa
 #### example
 ``` javascript
 var tree = new Tree();
-```
 [1,2,3,4,5,6,7,8,9,10].forEach(tree.insert, tree);
 
 var iterator = tree.createIterator();
