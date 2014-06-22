@@ -1,7 +1,8 @@
 {
   "name": "avltree",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "an AVL tree implementation that supports node streams",
+  "homepage": "https://github.com/mmaelzer/avltree",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -30,5 +31,9 @@
   "devDependencies": {
     "tape": "~2.13.1",
     "underscore": "~1.6.0"
+  },
+  "repository": {
+    "url": "git://github.com/mmaelzer/avltree.git",
+    "type": "git"
   }
 }
