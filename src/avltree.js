@@ -53,7 +53,7 @@ AvlTree.prototype.compareWith = function(comparator) {
  */
 function defaultCompare(a, b) {
   return a - b;
-};
+}
 
 /**
  *  @return {Object}
