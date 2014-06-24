@@ -78,6 +78,18 @@ AvlTree.prototype.clone = function() {
 };
 
 /**
+ * @param {Function(Error, AvlTree)} callback
+ * @public
+ */
+AvlTree.prototype.cloneAsync = function(callback) {
+  var tree = new AvlTree({compareWith: this.compare});
+  var read = this.createReadStream();
+  read.pipe(tree.createWriteStream());
+  read.on('end', function() { callback(null, tree); })
+      .on('error', callback);
+};
+
+/**
  *  @param {*} value
  *  @return {Boolean}
  *  @public
@@ -322,28 +334,11 @@ AvlTree.prototype.walk = function() {
  *  @public
  */
 AvlTree.prototype.walkAsync = function(callback) {
-  _.delay(function() {
-    var leftValues = [];
-    var rightValues = [];
-    var thisValue = this.value;
-    var times = 1;
-    if (this.left) {
-      this.left.walkAsync(function(err, values) {
-        done(leftValues = values);
-      });
-      times++;
-    }
-    if (this.right) {
-      this.right.walkAsync(function(err, values) {
-        done(rightValues = values);
-      });
-      times++;
-    }
-    var done = _.after(times, function() {
-      callback(null, leftValues.concat([thisValue]).concat(rightValues));
-    });
-    done();
-  }.bind(this));
+  var values = [];
+  var read = this.createReadStream();
+  read.on('data', function(val) { values.push(val); })
+      .on('error', callback)
+      .on('end', function() { callback(null, values); });
 };
 
 /**
