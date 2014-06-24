@@ -192,7 +192,7 @@ console.log(tree.walk());
 
 ### walkAsync(callback)
 
-Walks the tree in order, asynchronously, passing an array of values via a callback. This is slower than the synchronous `walk` call but does not block.
+Walks the tree in order, asynchronously, passing an array of values via a callback.
 
 #### example
 ``` javascript
@@ -208,7 +208,7 @@ tree.walkAsync(function(err, values) {
 
 ### remove(value)
 
-Removes the given value from the tree if it exists. Returns a `boolean` whether a removal occurred.
+Removes the given value from the tree if it exists. Returns a `boolean` if a removal occurred.
 
 #### example
 ``` javascript
