@@ -117,6 +117,7 @@ read.on('end', function() {
 });
 ```
 
+
 ### createIterator()
 
 Returns an `Iterator` object that you can call `next()` or `previous()` on to walk the tree incrementally.
@@ -135,18 +136,134 @@ console.log(iterator.prev());
 // 1
 console.log(iterator.prev());
 // undefined
+
+var iterator2 = tree.createIterator();
+console.log(iterator.prev());
+// 10
+console.log(iterator.prev());
+// 9
+console.log(iterator.next());
+// 10
+
 ```
+
 
 ### min()
 
-Returns the minimum value in the tree
+Returns the minimum value in the tree.
+
+#### example
+``` javascript
+var tree = new Tree();
+[1,2,3,4,5,6,7,8,9,10].forEach(tree.insert, tree);
+
+console.log(tree.min());
+// 1
+```
 
 
 ### max()
 
-Returns the maximum value in the tree
+Returns the maximum value in the tree.
+
+#### example
+``` javascript
+var tree = new Tree();
+[1,2,3,4,5,6,7,8,9,10].forEach(tree.insert, tree);
+
+console.log(tree.max());
+// 10
+```
 
 
 ### walk()
 
-Walks the tree in order, returning an array of values
+Walks the tree in order, returning an array of values.
+
+#### example
+``` javascript
+var tree = new Tree();
+[1,2,3,4,5,6,7,8,9,10].forEach(tree.insert, tree);
+
+console.log(tree.walk());
+// [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+```
+
+
+### walkAsync(callback)
+
+Walks the tree in order, asynchronously, passing an array of values via a callback. This is slower than the synchronous `walk` call but does not block.
+
+#### example
+``` javascript
+var tree = new Tree();
+[1,2,3,4,5,6,7,8,9,10].forEach(tree.insert, tree);
+
+tree.walkAsync(function(err, values) {
+  console.log(values);
+  // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+});
+```
+
+
+### remove(value)
+
+Removes the given value from the tree if it exists. Returns a `boolean` whether a removal occurred.
+
+#### example
+``` javascript
+var tree = new Tree();
+[1,2,3,4,5,6,7,8,9,10].forEach(tree.insert, tree);
+
+console.log(tree.remove(8));
+// true
+console.log(tree.walk());
+// [1, 2, 3, 4, 5, 6, 7, 9, 10]
+console.log(tree.move(400));
+// false
+```
+
+
+### clone()
+
+Returns a copy of the tree.
+
+#### example
+``` javascript
+var tree = new Tree();
+[1,2,3,4,5,6,7,8,9,10].forEach(tree.insert, tree);
+
+var treeClone = tree.clone();
+
+console.log(tree.remove(10));
+// true
+
+console.log(treeClone.walk());
+// [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+console.log(tree.walk());
+// [1, 2, 3, 4, 5, 6, 7, 8, 9]
+```
+
+
+### cloneAsync(callback)
+
+Clones the tree asynchronously, passing a new tree via a callback.
+
+#### example
+``` javascript
+var tree = new Tree();
+[1,2,3,4,5,6,7,8,9,10].forEach(tree.insert, tree);
+
+tree.cloneAsync(function(err, treeClone) {
+
+  console.log(tree.remove(10));
+  // true
+
+  console.log(treeClone.walk());
+  // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+  console.log(tree.walk());
+  // [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+});
+```
