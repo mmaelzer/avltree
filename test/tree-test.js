@@ -11,7 +11,7 @@ function createPopulatedTree(data) {
 }
 
 test('tree methods', function(t) {
-  t.plan(13);
+  t.plan(14);
   // A nice prime number
   var DATA_SIZE = 102797;
   var testData = [];
@@ -63,9 +63,15 @@ test('tree methods', function(t) {
   readStream.on('end', t.deepEqual.bind(t, streamData, testArray, 'tree.createReadStream()'));
 
   t.deepEqual(tree.clone().walk(), tree.walk(), 'tree.clone()');
+
+  tree.cloneAsync(function(err, newTree) {
+    t.deepEqual(tree.walk(), newTree.walk(), 'tree.cloneAsync()');
+  });
+
   tree.walkAsync(function(err, values) {
     t.deepEqual(values, tree.walk(), 'tree.walkAsync()');
   });
+
   var treeWithMethod = new Tree().compareWith(function(a, b) {
     return b - a;
   });
