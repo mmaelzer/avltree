@@ -274,9 +274,9 @@ AvlTree.prototype.findNodeWithParents = function(value) {
   if (comparison === 0) {
     return thisValue;
   } else if (comparison > 0) {
-    return this.left ? thisValue.concat(this.left.findNodeWithParents(value)) : null;
+    return this.left ? thisValue.concat(this.left.findNodeWithParents(value)) : thisValue;
   } else {
-    return this.right ? thisValue.concat(this.right.findNodeWithParents(value)) : null;
+    return this.right ? thisValue.concat(this.right.findNodeWithParents(value)) : thisValue;
   }
 };
 
